@@ -90,8 +90,9 @@ module FFMPEG
     end
     
     
-    def slideshow(imagedirectory, output_file, number_of_frames, options = EncodingOptions.new, transcoder_options = {}, &block)
-      Slideshow.new(imagedirectory, output_file, number_of_frames, options, transcoder_options).run &block
+    def slideit(imagedirectory, output_file, number_of_frames, options = EncodingOptions.new, transcoder_options = {}, &block)
+      puts "hey do your thing"
+      #Slideshow.new(imagedirectory, output_file, number_of_frames, options, transcoder_options).run &block
     end
     
     
