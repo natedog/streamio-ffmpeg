@@ -1,5 +1,4 @@
-require 'open3'
-require 'shellwords'
+
 
 module FFMPEG
   class Slideshow
