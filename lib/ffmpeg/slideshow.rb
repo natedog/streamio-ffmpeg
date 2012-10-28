@@ -18,7 +18,7 @@ module FFMPEG
       @transcoder_options = transcoder_options
       @errors = []
       
-      apply_transcoder_options
+      #apply_transcoder_options
     end
     
     # ffmpeg -f image2 -i public/images/frame_%d.jpg -sameq  test.mpg
@@ -32,7 +32,7 @@ module FFMPEG
     
     def run
       #command = "#{FFMPEG.ffmpeg_binary} -y -i #{Shellwords.escape(@movie.path)} #{@raw_options} #{Shellwords.escape(@output_file)}"
-      command = "#{FFMPEG.ffmpeg_binary} -f image2 -i #{Shellwords.escape(@imagedirectory)}_%d.jpg -sameq  #{Shellwords.escape(@output_file)}"
+      command = "#{FFMPEG.ffmpeg_binary} -f image2 -i #{Shellwords.escape(@imagedirectory)}%d.jpg -sameq  -y #{Shellwords.escape(@output_file)}"
       
       FFMPEG.logger.info("Running transcoding...\n#{command}\n")
       output = ""
@@ -92,14 +92,6 @@ module FFMPEG
         return false
       end
       
-      if validate_duration?
-        precision = @raw_options[:duration] ? 1.5 : 1.1
-        desired_duration = @raw_options[:duration] && @raw_options[:duration] < @movie.duration ? @raw_options[:duration] : @movie.duration
-        if (encoded.duration >= (desired_duration * precision) or encoded.duration <= (desired_duration / precision))
-          @errors << "encoded file duration differed from original/specified duration (wanted: #{desired_duration}sec, got: #{encoded.duration}sec)"
-          return false
-        end
-      end
       
       true
     end
@@ -108,34 +100,12 @@ module FFMPEG
       @encoded ||= Movie.new(@output_file)
     end
     
-    private
-    def apply_transcoder_options
-      return if @movie.calculated_aspect_ratio.nil?
-      case @transcoder_options[:preserve_aspect_ratio].to_s
-      when "width"
-        new_height = @raw_options.width / @movie.calculated_aspect_ratio
-        new_height = new_height.ceil.even? ? new_height.ceil : new_height.floor
-        new_height += 1 if new_height.odd? # needed if new_height ended up with no decimals in the first place
-        @raw_options[:resolution] = "#{@raw_options.width}x#{new_height}"
-      when "height"
-        new_width = @raw_options.height * @movie.calculated_aspect_ratio
-        new_width = new_width.ceil.even? ? new_width.ceil : new_width.floor
-        new_width += 1 if new_width.odd?
-        @raw_options[:resolution] = "#{new_width}x#{@raw_options.height}"
-      end
-    end
-    
-    def validate_duration?
-      return false if @movie.uncertain_duration?
-      return false if %w(.jpg .png).include?(File.extname(@output_file))
-      return false if @raw_options.is_a?(String)
-      true
-    end
-    
     def fix_encoding(output)
       output[/test/]
     rescue ArgumentError
       output.force_encoding("ISO-8859-1")
     end
+    
+ 
   end
 end
