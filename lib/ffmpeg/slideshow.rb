@@ -32,7 +32,7 @@ module FFMPEG
     
     def run
       #command = "#{FFMPEG.ffmpeg_binary} -y -i #{Shellwords.escape(@movie.path)} #{@raw_options} #{Shellwords.escape(@output_file)}"
-      command = "#{FFMPEG.ffmpeg_binary} -f image2 -i #{Shellwords.escape(@imagedirectory)}%d.jpg -sameq  -y #{Shellwords.escape(@output_file)}"
+      command = "#{FFMPEG.ffmpeg_binary} -f image2 -i #{Shellwords.escape(@imagedirectory)}%d.jpg -sameq  -y #{@raw_options} #{Shellwords.escape(@output_file)}"
       
       FFMPEG.logger.info("Running transcoding...\n#{command}\n")
       output = ""
