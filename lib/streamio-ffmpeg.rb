@@ -8,6 +8,7 @@ require 'ffmpeg/movie'
 require 'ffmpeg/transcoder'
 require 'ffmpeg/encoding_options'
 require 'ffmpeg/slideshow'
+require 'ffmpeg/raw'
  
 module FFMPEG
   # FFMPEG logs information about its progress when it's transcoding.

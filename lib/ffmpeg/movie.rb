@@ -96,6 +96,11 @@ module FFMPEG
     end
     
     
+    def rawcli(cliargs,output_file,&block) 
+        Raw.new(cliargs,output_file).run &block
+    end  
+    
+    
     protected
     def aspect_from_dar
       return nil unless dar
